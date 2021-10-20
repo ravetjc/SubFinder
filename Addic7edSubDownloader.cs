@@ -27,6 +27,7 @@ namespace SubFinder
                 string url = getURL(show, season, number);
 
                 Console.WriteLine("url = " + url);
+                Console.WriteLine("time = " + DateTime.Now.ToShortDateString() + "  " + DateTime.Now.ToLongTimeString());
 
                 var stringTask = client.GetStringAsync(url);
 
@@ -152,6 +153,10 @@ namespace SubFinder
                 {
                     var subUrl = nodes.Where(x => (x.InnerText.Contains("most updated") || x.InnerText.Contains("Download"))).First().Attributes["href"].Value;
 
+                    while (subVersions.ContainsKey(version))
+                    {
+                        version += '_';
+                    }
                     subVersions.Add(version, BASE_URL + subUrl);
                 }
                 catch (Exception e)

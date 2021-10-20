@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Discord.Webhook;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace SubFinder
     class Program
     {
         static bool isSilent = false;
+
+        static DiscordWebhookClient discordClient = null;
 
         /// <summary>
         /// Console app entry point
@@ -48,6 +51,10 @@ namespace SubFinder
                 isSilent = true;
             }
 
+            if (s.Webhook != null && s.Webhook != string.Empty)
+            {
+                discordClient = new DiscordWebhookClient(s.Webhook);
+            }
 
             Addic7edSubDownloader dl = new Addic7edSubDownloader();
 
@@ -71,7 +78,7 @@ namespace SubFinder
 
                         var serie = e.Show;
 
-                        if (s.NameMatches.Any(x=> x.FolderName == serie.ToLower()))
+                        if (s.NameMatches.Any(x => x.FolderName == serie.ToLower()))
                         {
                             serie = s.NameMatches.Find(x => x.FolderName == serie.ToLower()).SearchName;
                         }
@@ -82,9 +89,8 @@ namespace SubFinder
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine("Can't match tv show");
-                            Console.WriteLine(ex.Message);
-                            Console.WriteLine(ex.StackTrace);
+                            SendNotification(new string[] { "Can't match tv show", ex.Message, ex.StackTrace });
+
                             WaitForKey(true);
                             break;
                         }
@@ -142,6 +148,28 @@ namespace SubFinder
 
 
             return episodes;
+        }
+
+        /// <summary>
+        /// Send message to discord using configureg webhook (if any)
+        /// </summary>
+        /// <param name="msg">message parts to send in one message</param>
+        static void SendNotification(string[] msg)
+        {
+            SendNotification(string.Join(Environment.NewLine, msg));
+        }
+
+        /// <summary>
+        /// Send message to discord using configureg webhook (if any)
+        /// </summary>
+        /// <param name="msg">message to send</param>
+        static void SendNotification(string msg)
+        {
+            if (discordClient != null)
+            {
+                discordClient.SendMessageAsync(msg, false);
+            }
+            Console.WriteLine(msg);
         }
     }
 }

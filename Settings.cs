@@ -52,6 +52,11 @@ namespace SubFinder
         public string TempFolder;
 
         /// <summary>
+        /// Webhook to use (or null or empty string to disable)
+        /// </summary>
+        public string Webhook;
+
+        /// <summary>
         /// List of name correspondances
         /// </summary>
         public List<NameMatch> NameMatches;

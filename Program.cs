@@ -63,6 +63,9 @@ namespace SubFinder
             {
                 foreach (var subpath in Directory.GetDirectories(path))
                 {
+                    /*if (!subpath.ToLower().EndsWith("serie to test"))
+                        continue;*/
+
                     Console.WriteLine("Will scan : " + subpath);
 
                     var episodes = ScanFolder(subpath);
@@ -89,7 +92,7 @@ namespace SubFinder
                         }
                         catch (Exception ex)
                         {
-                            SendNotification(new string[] { "Can't match tv show", ex.Message, ex.StackTrace });
+                            SendNotification(new string[] { "Exception while getting sub", $"{serie}, {e.Season}, {e.Number}", ex.Message, ex.StackTrace });
 
                             WaitForKey(true);
                             break;

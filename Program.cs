@@ -13,6 +13,8 @@ namespace SubFinder
 
         static DiscordWebhookClient discordClient = null;
 
+        static Settings settings;
+
         /// <summary>
         /// Console app entry point
         /// </summary>
@@ -31,9 +33,9 @@ namespace SubFinder
                 return;
             }
 
-            Settings s = Settings.getInstance();
+            settings = Settings.getInstance();
 
-            if (s == null)
+            if (settings == null)
             {
                 WaitForKey(true);
                 return;
@@ -51,21 +53,18 @@ namespace SubFinder
                 isSilent = true;
             }
 
-            if (s.Webhook != null && s.Webhook != string.Empty)
+            if (settings.Webhook != null && settings.Webhook != string.Empty)
             {
-                discordClient = new DiscordWebhookClient(s.Webhook);
+                discordClient = new DiscordWebhookClient(settings.Webhook);
             }
 
             Addic7edSubDownloader dl = new Addic7edSubDownloader();
 
-            Console.WriteLine("Languague :" + s.Language);
-            foreach (var path in s.PathToScan)
+            Console.WriteLine("Languague :" + settings.Language);
+            foreach (var path in settings.PathToScan)
             {
                 foreach (var subpath in Directory.GetDirectories(path))
                 {
-                    /*if (!subpath.ToLower().EndsWith("serie to test"))
-                        continue;*/
-
                     Console.WriteLine("Will scan : " + subpath);
 
                     var episodes = ScanFolder(subpath);
@@ -81,9 +80,9 @@ namespace SubFinder
 
                         var serie = e.Show;
 
-                        if (s.NameMatches.Any(x => x.FolderName == serie.ToLower()))
+                        if (settings.NameMatches.Any(x => x.FolderName == serie.ToLower()))
                         {
-                            serie = s.NameMatches.Find(x => x.FolderName == serie.ToLower()).SearchName;
+                            serie = settings.NameMatches.Find(x => x.FolderName == serie.ToLower()).SearchName;
                         }
 
                         try
@@ -92,10 +91,12 @@ namespace SubFinder
                         }
                         catch (Exception ex)
                         {
-                            SendNotification(new string[] { "Exception while getting sub", $"{serie}, {e.Season}, {e.Number}", ex.Message, ex.StackTrace });
+                            if (!settings.ExcludedEpisodes.Contains(new Settings.EpisodeToExclude(serie, e.Season, e.Number)))
+                            {
+                                SendNotification(new string[] { "Exception while getting sub", $"{serie}, {e.Season}, {e.Number}", ex.Message, ex.StackTrace });
 
-                            WaitForKey(true);
-                            break;
+                                WaitForKey(true);
+                            }
                         }
 
                         Thread.Sleep(5000);

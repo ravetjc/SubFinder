@@ -22,6 +22,43 @@ namespace SubFinder
         }
 
         /// <summary>
+        /// Class to skip a specific episode of a show (to avoid alerts if missing, but will still try to download it)
+        /// </summary>
+        public class EpisodeToExclude
+        {
+            [XmlAttribute]
+            public string FolderName;
+            [XmlAttribute]
+            public string Season;
+            [XmlAttribute]
+            public string Number;
+
+            public override bool Equals(object obj)
+            {
+                if (obj is EpisodeToExclude)
+                {
+                    EpisodeToExclude other = (EpisodeToExclude)obj;
+
+                    return FolderName.Equals(other.FolderName, StringComparison.CurrentCultureIgnoreCase) && Season == other.Season && Number == other.Number;
+                }
+
+                return false;
+            }
+
+            public EpisodeToExclude()
+            {
+
+            }
+
+            public EpisodeToExclude(string folder, string season, string number)
+            {
+                FolderName = folder;
+                Season = season;
+                Number = number;
+            }
+        }
+
+        /// <summary>
         /// Singleton
         /// </summary>
         private static Settings instance = null;
@@ -62,6 +99,11 @@ namespace SubFinder
         public List<NameMatch> NameMatches;
 
         /// <summary>
+        /// List of excluded episodes
+        /// </summary>
+        public List<EpisodeToExclude> ExcludedEpisodes;
+
+        /// <summary>
         /// Create a default settings file so the user can modify it easily
         /// </summary>
         public static void CreateSettingsFile()
@@ -73,6 +115,8 @@ namespace SubFinder
             test.TempFolder = @"temp";
             test.NameMatches = new List<NameMatch>();
             test.NameMatches.Add(new NameMatch() { FolderName = "Test", SearchName = "T35t" });
+            test.ExcludedEpisodes = new List<EpisodeToExclude>();
+            test.ExcludedEpisodes.Add(new EpisodeToExclude() { FolderName = "Test", Season = "01", Number = "01" });
 
             XmlSerializer x = new XmlSerializer(test.GetType());
 

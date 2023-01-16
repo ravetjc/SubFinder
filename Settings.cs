@@ -94,6 +94,11 @@ namespace SubFinder
         public string Webhook;
 
         /// <summary>
+        /// Wait time between episodes (ms)
+        /// </summary>
+        public int WaitTime;
+
+        /// <summary>
         /// List of name correspondances
         /// </summary>
         public List<NameMatch> NameMatches;
@@ -113,6 +118,7 @@ namespace SubFinder
             test.Language = "Fre";
             test.UseTempFolder = false;
             test.TempFolder = @"temp";
+            test.WaitTime = 3000;
             test.NameMatches = new List<NameMatch>();
             test.NameMatches.Add(new NameMatch() { FolderName = "Test", SearchName = "T35t" });
             test.ExcludedEpisodes = new List<EpisodeToExclude>();

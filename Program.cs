@@ -99,7 +99,7 @@ namespace SubFinder
                             }
                         }
 
-                        Thread.Sleep(5000);
+                        Thread.Sleep(settings.WaitTime);
                     }
                 }
             }

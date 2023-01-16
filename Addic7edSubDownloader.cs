@@ -130,7 +130,7 @@ namespace SubFinder
                 string inner = table.InnerText;
                 int start = inner.IndexOf(VERSION);
                 string version = inner.Substring(start, table.InnerText.IndexOf(',') - start);
-                version = version.Replace(VERSION, "");
+                version = version.Replace(VERSION, "").ToLower();
 
                 var frParts = table.SelectNodes(".//*[contains(@class, 'language')]").Where(a => a.InnerText.StartsWith(Settings.getInstance().Language));
 

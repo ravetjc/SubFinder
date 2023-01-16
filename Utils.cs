@@ -31,7 +31,14 @@ namespace SubFinder
         /// <returns>String formatted</returns>
         public static string uppercaseFirst(string s)
         {
-            return char.ToUpper(s[0]) + s.Substring(1);
+            if (s != null && s.Length > 0)
+            {
+                return char.ToUpper(s[0]) + s.Substring(1);
+            }
+            else
+            {
+                return s;
+            }
         }
 
         /// <summary>

@@ -65,11 +65,23 @@ namespace SubFinder
             {
                 foreach (var subpath in Directory.GetDirectories(path))
                 {
+                    if ((File.GetAttributes(subpath) & FileAttributes.Hidden) == FileAttributes.Hidden)
+                    {
+                        Console.WriteLine("Skipping hidden folder : " + subpath);
+                        continue;
+                    }
+
                     Console.WriteLine("Will scan : " + subpath);
 
                     var episodes = ScanFolder(subpath);
                     foreach (var e in episodes)
                     {
+                        if (string.IsNullOrWhiteSpace(e.Season) || string.IsNullOrWhiteSpace(e.Number))
+                        {
+                            Console.WriteLine($"Skipping file {subpath} : can't parser file name");
+                            continue;
+                        }
+
                         Console.WriteLine("Looking for subtitles for " + e.Filename);
 
                         if (Utils.hasSubs(e.Filename))

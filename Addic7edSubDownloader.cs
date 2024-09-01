@@ -148,10 +148,10 @@ namespace SubFinder
                     continue;
                 }
 
-                var nodes = frInfos.SelectNodes(".//a[contains(@class, 'buttonDownload')]");
+                var nodes = frInfos.SelectNodes(".//a[contains(@class, 'face-button')]");
                 try
                 {
-                    var subUrl = nodes.Where(x => (x.InnerText.Contains("most updated") || x.InnerText.Contains("Download"))).First().Attributes["href"].Value;
+                    var subUrl = nodes.Where(x => (x.InnerText.Contains("Most Updated") || x.InnerText.Contains("Download"))).First().Attributes["href"].Value;
 
                     while (subVersions.ContainsKey(version))
                     {
